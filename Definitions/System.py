@@ -4,9 +4,10 @@ from .MapScreen import *
 
 
 class System:
-    def __init__(self, writer=NullWriter()):
+    def __init__(self, period=60, writer=NullWriter()):
         self.planets = []
         self.time = 0
+        self.period = period
         self.writer = writer
         self.screens = []
         self.collisions = []
@@ -69,7 +70,7 @@ class System:
         self.time += 1
         for planet in self.planets:
             planet.move()
-        if self.time % 60 == 0:
+        if self.time % self.period == 0:
             for screen in self.screens:
                 screen.change_offset()
             for planet in self.planets:
