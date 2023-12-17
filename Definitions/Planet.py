@@ -1,9 +1,8 @@
-import turtle
-
-
 class Object:
     def __init__(self, system, name, mass, radius, position, speed,
-                 turtles=[], color=None):
+                 turtles=None, color=None):
+        if turtles is None:
+            turtles = []
         self.system = system
         self.name = name
         self.mass = mass
@@ -78,7 +77,7 @@ class Planet(Object):
 
 class Star(Object):
     def __init__(self, system, name, mass, radius, position, speed, light,
-                 turtles=[], color=None):
+                 turtles=None, color=None):
         super().__init__(system, name, mass, radius, position, speed, turtles, color)
         self.light = light
 
@@ -88,7 +87,7 @@ class Star(Object):
 
 class Spaceship(Object):
     def __init__(self, system, name, mass, radius, position, speed, program, fuel,
-                 turtles=[], color=None):
+                 turtles=None, color=None):
         super().__init__(system, name, mass, radius, position, speed, turtles, color)
         self.program = program
         self.fuel = fuel
@@ -100,7 +99,7 @@ class Spaceship(Object):
 
 class MassCenter(Object):
     def __init__(self, system, name, mass, radius, position, speed, objects,
-                 turtles=[], color=None):
+                 turtles=None, color=None):
         super().__init__(system, name, mass, radius, position, speed, turtles, color)
         self.objects = objects
         self.move()
