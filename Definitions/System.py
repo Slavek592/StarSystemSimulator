@@ -12,8 +12,16 @@ class System:
         self.screens = []
         self.collisions = []
 
-    def add_screen(self, offset=[-150, 100], scale=1, angle=0, spy_object=None):
-        screen = MapWindow("Simulator", "640x480", offset, scale, angle, spy_object)
+    def add_screen(self, offset=None, scale=1, angle=0, spy_object=None, window_type="internal"):
+        if offset is None:
+            if window_type == "external":
+                offset = [0, 0]
+            else:
+                offset = [-150, 100]
+        if window_type == "external":
+            screen = ExternalWindow(offset, scale, angle, spy_object)
+        else:
+            screen = MapWindow("Simulator", "640x480", offset, scale, angle, spy_object)
         self.screens.append(screen)
         return screen
 
@@ -85,7 +93,8 @@ class System:
             for collision in self.collisions:
                 collision[0].eat_object(collision[1])
                 for map_turtle in collision[1].turtles:
-                    map_turtle.turtle.shapesize(0.01, 0.01)
+                    if isinstance(map_turtle, MapTurtle):
+                        map_turtle.turtle.shapesize(0.01, 0.01)
                 self.planets.remove(collision[1])
             self.collisions = []
 
