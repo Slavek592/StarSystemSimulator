@@ -14,16 +14,18 @@ class System:
         self.screenshots = []
         self.auto_screenshots = auto_screenshots
 
-    def add_screen(self, offset=None, scale=1, angle=0, spy_object=None, window_type="internal"):
+    def add_screen(self, offset=None, scale=1, angle=0, spy_object=None, window_type="basic"):
         if offset is None:
-            if window_type == "external":
-                offset = [0, 0]
-            else:
+            if window_type == "internal":
                 offset = [-150, 100]
+            else:
+                offset = [0, 0]
         if window_type == "external":
             screen = ExternalWindow(offset, scale, angle, spy_object)
-        else:
+        elif window_type == "internal":
             screen = MapWindow("Simulator", "640x480", offset, scale, angle, spy_object)
+        else:
+            screen = BasicWindow(offset, scale, angle, spy_object)
         self.screens.append(screen)
         return screen
 

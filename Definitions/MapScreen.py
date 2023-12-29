@@ -1,4 +1,4 @@
-from turtle import RawTurtle, TurtleScreen
+from turtle import RawTurtle, TurtleScreen, Turtle, Screen
 from tkinter import *
 from math import sin, cos, atan, pi
 import socket
@@ -56,6 +56,49 @@ class ITurtle:
                 ((position[1] - self.temporary_offset[1]) * cos(self.angle)
                  - (position[0] - self.temporary_offset[0]) * sin(self.angle)
                  - self.offset[1]) * self.scale)
+
+
+class BasicWindow(IWindow):
+    def __init__(self, offset=None, scale=1, angle=0, spy_object=None,
+                 angle_object=None):
+        super().__init__(offset, scale, angle, spy_object, angle_object)
+        self.screen = Screen()
+
+    def add_turtle(self):
+        if self.spy_object is None:
+            turtle = BasicTurtle(self.offset, self.scale, self.angle)
+        else:
+            turtle = BasicTurtle([self.spy_object.position[0] + self.offset[0],
+                                 self.spy_object.position[1] + self.offset[1]], self.scale, self.angle)
+        self.turtles.append(turtle)
+        return turtle
+
+    def screenshot(self, name="file"):
+        self.screen.getcanvas().postscript(file="Screenshots/" + name + ".eps")
+        pic = Image.open("Screenshots/" + name + ".eps")
+        pic.load()
+        if pic.mode in ('P', '1'):
+            pic = pic.convert("RGB")
+        pic.save("Screenshots/" + name + ".png")
+
+
+class BasicTurtle(ITurtle):
+    def __init__(self, offset=None, scale=1, angle=0):
+        super().__init__(offset, scale, angle)
+        self.turtle = Turtle()
+        self.turtle.shape("circle")
+        self.turtle.shapesize(0.2, 0.2)
+        self.turtle.speed(0)
+
+    def go_to_position(self, position):
+        self.turtle.goto(self.count_new_position(position))
+
+    def prepare_turtle(self, position, color=None):
+        if color is not None:
+            self.turtle.color(color)
+        self.turtle.penup()
+        self.go_to_position(position)
+        self.turtle.pendown()
 
 
 class MapWindow(Tk, IWindow):
