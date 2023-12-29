@@ -4,13 +4,15 @@ from .MapScreen import *
 
 
 class System:
-    def __init__(self, period=60, writer=NullWriter()):
+    def __init__(self, period=60, writer=NullWriter(), auto_screenshots=0):
         self.planets = []
         self.time = 0
         self.period = period
         self.writer = writer
         self.screens = []
         self.collisions = []
+        self.screenshots = []
+        self.auto_screenshots = auto_screenshots
 
     def add_screen(self, offset=None, scale=1, angle=0, spy_object=None, window_type="internal"):
         if offset is None:
@@ -89,6 +91,8 @@ class System:
         else:
             for planet in self.planets:
                 planet.accelerate()
+        if self.auto_screenshots > 0 and self.time % self.auto_screenshots == 0:
+            self.make_screenshots()
         if len(self.collisions) > 0:
             for collision in self.collisions:
                 collision[0].eat_object(collision[1])
@@ -97,6 +101,15 @@ class System:
                         map_turtle.turtle.shapesize(0.01, 0.01)
                 self.planets.remove(collision[1])
             self.collisions = []
+
+    def make_screenshots(self, names=None):
+        if names is None:
+            names = range(len(self.screenshots))
+        for i in range(len(self.screenshots)):
+            if len(names) > i:
+                self.screens[self.screenshots[i]].screenshot(str(names[i]))
+            else:
+                self.screens[self.screenshots[i]].screenshot()
 
     def write(self):
         for planet in self.planets:

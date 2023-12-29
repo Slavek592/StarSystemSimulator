@@ -2,6 +2,7 @@ from turtle import RawTurtle, TurtleScreen
 from tkinter import *
 from math import sin, cos, atan, pi
 import socket
+from PIL import Image
 
 
 class IWindow:
@@ -71,6 +72,14 @@ class MapWindow(Tk, IWindow):
         self.canvas.pack(expand=True, fill=BOTH)
         self.screen = TurtleScreen(self.canvas)
 
+    def screenshot(self, name="file"):
+        self.canvas.postscript(file="Screenshots/" + name + ".eps")
+        pic = Image.open("Screenshots/" + name + ".eps")
+        pic.load()
+        if pic.mode in ('P', '1'):
+            pic = pic.convert("RGB")
+        pic.save("Screenshots/" + name + ".png")
+
     def update_window(self):
         if self.running:
             self.update()
@@ -113,7 +122,7 @@ class ExternalWindow(IWindow):
                  angle_object=None):
         super().__init__(offset, scale, angle, spy_object, angle_object)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.bind(("127.0.0.1", 8000))
+        self.socket.bind(("0.0.0.0", 8000))
         self.socket.listen()
         connection, address = self.socket.accept()
         print(f"Connected by {address}")

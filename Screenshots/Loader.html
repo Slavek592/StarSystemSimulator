@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StarSystemSimulator</title>
+    <style>
+        p {
+          text-align: center
+        }
+    </style>
+    <script>
+        var name = "0.png";
+        function Refresh()
+        {
+            document.getElementById('image').src = name + "?random=" + new Date().getTime();
+            document.getElementById('test').innerHTML = new Date().getTime();
+        }
+        function GetName()
+        {
+            name = document.getElementById('input').value;
+        }
+        setInterval(Refresh, 6000);
+    </script>
+</head>
+<body>
+    <p><img src="0.png" id="image"></p>
+    <p><button onclick="Refresh()">Refresh</button></p>
+    <p>
+        <input id="input" type="text">
+        <button onclick="GetName()">Set image name</button>
+    </p>
+    <p>Last actualization:</p>
+    <p id="test"></p>
+</body>
+</html>
